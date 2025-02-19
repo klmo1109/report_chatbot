@@ -5,3 +5,4 @@ python-dotenv~=1.0.1
 pypdf~=5.2.0
 langchain~=0.3.17
 scikit-learn~=1.6.1
+faiss-cpu
