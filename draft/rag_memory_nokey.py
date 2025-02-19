@@ -19,10 +19,11 @@ os.environ["USER_AGENT"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKi
 openai_api_key = os.getenv("OPENAI_API_KEY")
 
 class FinancialReportRAG:
-    def __init__(self, input_source):
+    def __init__(self, input_source, openai_api_key):
         """
         初始化 RAG 模型
         :param input_source: 可以是 PDF 網址或本地 PDF 文件路徑
+        :param openai_api_key: OpenAI API Key
         """
         if input_source.startswith("http"):
             self.pdf_path = self._download_pdf(input_source)
@@ -30,13 +31,17 @@ class FinancialReportRAG:
             self.pdf_path = input_source
 
         self.texts_with_pages = self._load_and_process_pdf()
-        self.embeddings = OpenAIEmbeddings(model="text-embedding-ada-002")
+        self.openai_api_key = openai_api_key  # 儲存 API Key
+
+        # **確保 API Key 被使用**
+        self.embeddings = OpenAIEmbeddings(model="text-embedding-ada-002", openai_api_key=self.openai_api_key)
+        self.llm = ChatOpenAI(model="gpt-4o", temperature=0, openai_api_key=self.openai_api_key)
+
         self.index, self.texts_with_pages = self._build_faiss_index()
-        self.llm = ChatOpenAI(model="gpt-4o", temperature=0)
 
         self.memory = ConversationBufferWindowMemory(
             memory_key="history",
-            k=2,  # 只記住最近 5 次對話
+            k=2,  # 只記住最近 2 次對話
             return_messages=True
         )
 
@@ -45,7 +50,7 @@ class FinancialReportRAG:
 
     def _download_pdf(self, url):
         """從網址下載 PDF 並存儲到本地"""
-        pdf_filename = "draft/financial_report.pdf"
+        pdf_filename = "financial_report.pdf"
         response = requests.get(url, stream=True)
         if response.status_code == 200:
             with open(pdf_filename, "wb") as f:
@@ -202,8 +207,7 @@ class FinancialReportRAG:
         - 若新問題與過去問題無關，請完全依據當前文件內容回答。
         - 直接回答問題，不要重複問題內容。
         - 只顯示具體答案，不要加入解釋性描述。
-        - 使用台灣的繁體中文通順語意，
-        - 若回答涉及金錢單位，請確認內文為新台幣或美元。
+        - 使用台灣的繁體中文通順語意，金錢單位請確認內文為新台幣或美元。
         """
 
         response = self.llm.invoke(prompt_template)
