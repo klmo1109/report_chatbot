@@ -23,7 +23,7 @@ if "access_granted" not in st.session_state:
     st.session_state.access_granted = False  # 是否允許訪問其他功能
 
 # Streamlit UI
-st.title("文件問答小助手")
+st.title("財務文件問答小助手")
 st.caption("💬 貼上網址或上傳pdf!讓我來回答你的問題吧！(預設為NVIDIA Q3 2024 Report)")
 
 # **密碼輸入**
