@@ -32,7 +32,7 @@ class FinancialReportRAG:
         self.texts_with_pages = self._load_and_process_pdf()
         self.embeddings = OpenAIEmbeddings(model="text-embedding-ada-002")
         self.index, self.texts_with_pages = self._build_faiss_index()
-        self.llm = ChatOpenAI(model="gpt-4o", temperature=0)
+        self.llm = ChatOpenAI(model="gpt-4", temperature=0)
 
         self.memory = ConversationBufferWindowMemory(
             memory_key="history",
