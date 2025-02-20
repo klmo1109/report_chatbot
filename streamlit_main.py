@@ -24,7 +24,7 @@ if "access_granted" not in st.session_state:
 
 # Streamlit UI
 st.title("財務文件問答小助手")
-st.caption("💬 貼上網址或上傳pdf!讓我來回答你的問題吧！(預設為NVIDIA Q3 2024 Report)")
+st.caption("💬 貼上網址或上傳pdf!讓我來回答你的問題吧！(預設為NVIDIA Corporation Form 10-Q For the Quarter Ended October 27, 2024)")
 
 # **密碼輸入**
 if not st.session_state.access_granted:
