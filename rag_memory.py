@@ -36,7 +36,7 @@ class FinancialReportRAG:
 
         self.memory = ConversationBufferWindowMemory(
             memory_key="history",
-            k=2,  # 只記住最近 5 次對話
+            k=4,  # 只記住最近 5 次對話
             return_messages=True
         )
 
